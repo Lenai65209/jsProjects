@@ -87,13 +87,13 @@ Infinity делать не нужно, однако, в случае если б
   * @returns {number} результат операции: "+", "-", "*", "/".
   */
   function mathOperation(arg1, arg2, operation) {
-    if (operation == "+") {
+    if (operation === "+") {
       return sumNum(arg1, arg2);
-    } else if (operation == "-") {
+    } else if (operation === "-") {
       return subModNum(arg1, arg2);
-    } else if (operation == "*") {
+    } else if (operation === "*") {
       return mulNum(arg1, arg2);
-    } else if (operation == "/") {
+    } else if (operation === "/") {
       return divNum(arg1, arg2);
     } else {
       return NaN;
