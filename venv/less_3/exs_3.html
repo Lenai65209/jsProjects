@@ -29,65 +29,65 @@
     },
   ];
 
-console.log(products);
-/* Не поняла, почему старые значения заменены на новые.
-А, если убрать splice значения остаются старые.
-Вывод. когдв splice не закоммнетинован:
-(3) [{…}, {…}, {…}]
-0: {id: 0, price: 170}
-1: {id: 1, price: 765}
-2: {id: 2, price: 850}
-length: 3
-[[Prototype]]: Array(0)
-Вывод, когда splice закоммнетинован:
-(3) [{…}, {…}, {…}]
-0: {id: 3, price: 200}
-1: {id: 4, price: 900}
-2: {id: 1, price: 1000}
-length: 3
-[[Prototype]]: Array(0)
-*/
+  console.log(products);
+  /* Не поняла, почему старые значения заменены на новые.
+  А, если убрать splice значения остаются старые.
+  Вывод. когдв splice не закоммнетинован:
+  (3) [{…}, {…}, {…}]
+  0: {id: 0, price: 170}
+  1: {id: 1, price: 765}
+  2: {id: 2, price: 850}
+  length: 3
+  [[Prototype]]: Array(0)
+  Вывод, когда splice закоммнетинован:
+  (3) [{…}, {…}, {…}]
+  0: {id: 3, price: 200}
+  1: {id: 4, price: 900}
+  2: {id: 1, price: 1000}
+  length: 3
+  [[Prototype]]: Array(0)
+  */
 
-products.forEach(products => console.log(products.price * 0.85));
-console.log(products);
-/* Здесь значения не меняются без splice.
-Новые значения видны при выврде в консоль.
-Вывод при незакоментированном splice:
-(3) [{…}, {…}, {…}]
-170
-765
-850
-0: {id: 0, price: 170}
-1: {id: 1, price: 765}
-2: {id: 2, price: 850}
-length: 3
-[[Prototype]]: Array(0)
-Вывод, когда splice закоммнетинован:
-(3) [{…}, {…}, {…}]
-170
-765
-850
-0: {id: 3, price: 200}
-1: {id: 4, price: 900}
-2: {id: 1, price: 1000}
-length: 3
-[[Prototype]]: Array(0)
-*/
+  products.forEach(products => console.log(products.price * 0.85));
+  console.log(products);
+  /* Здесь значения не меняются без splice.
+  Новые значения видны при выврде в консоль.
+  Вывод при незакоментированном splice:
+  (3) [{…}, {…}, {…}]
+  170
+  765
+  850
+  0: {id: 0, price: 170}
+  1: {id: 1, price: 765}
+  2: {id: 2, price: 850}
+  length: 3
+  [[Prototype]]: Array(0)
+  Вывод, когда splice закоммнетинован:
+  (3) [{…}, {…}, {…}]
+  170
+  765
+  850
+  0: {id: 3, price: 200}
+  1: {id: 4, price: 900}
+  2: {id: 1, price: 1000}
+  length: 3
+  [[Prototype]]: Array(0)
+  */
 
-products.forEach((item, i) => products.splice(i, 1, {
-      id: i,
-      price: item.price * 0.85,
-    }));
-console.log(products);
-/* И здесь значения сохранились, что странно,
-если комментарии нигде не стоят.
-(3) [{…}, {…}, {…}]
-0: {id: 0, price: 170}
-1: {id: 1, price: 765}
-2: {id: 2, price: 850}
-length: 3
-[[Prototype]]: Array(0)
-*/
+  products.forEach((item, i) => products.splice(i, 1, {
+        id: i,
+        price: item.price * 0.85,
+      }));
+  console.log(products);
+  /* И здесь значения сохранились, что странно,
+  если комментарии нигде не стоят.
+  (3) [{…}, {…}, {…}]
+  0: {id: 0, price: 170}
+  1: {id: 1, price: 765}
+  2: {id: 2, price: 850}
+  length: 3
+  [[Prototype]]: Array(0)
+  */
 
 </script>
 
