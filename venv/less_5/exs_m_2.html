@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p class="basket">Корзина</p>
+<div class="basket">
+</div>
+  <script>
+    document.querySelector('div.basket')
+    .insertAdjacentHTML('afterBegin',
+    '<button class="btn" id="usBasket" \
+    data-toggle="basket" aria-haspopup="true" aria-expanded="false">\
+        Basket button\
+    </button>');
+
+    document.querySelector('.btn')
+    .insertAdjacentHTML('afterEnd', '<bs class="basketStatus" \
+    id="baskeеButtonStatus" data-cost="0" data-quantity="0">\
+    «Корзина пуста»</bs>');
+
+    /**
+    * Изменяет значение атрибутов элемента с классом basketStatus
+    * data-cost и data-quantity, устанавливая ощую сумму и количество товаров.
+    * @param {string} usQuantity - количество выбранных товаров.
+    * @param {string} usCost - общая сумма, на которую выбраны товары.
+    * Изменяет контент элемента с классом basketStatus.
+    * Если корзина пуста устанавливает: «Корзина пуста»,
+    * Если овар выбран, устанавливает:
+    * «В корзине: n товаров на сумму m рублей»
+    */
+    function setQuantityCost(usQuantity, usCost) {
+
+      document.querySelector('.basketStatus').dataset.cost=usCost;
+      document.querySelector('.basketStatus').dataset.quantity=usQuantity;
+
+      let cost = document.querySelector('.basketStatus')
+        .getAttribute('data-cost');
+      let quantity = document.querySelector('.basketStatus')
+        .getAttribute('data-quantity');
+      let text = " В корзине: " + quantity +
+        " товаров на сумму " + cost + " рублей ";
+
+      const zeroText = ' «Корзина пуста» '
+
+      if (cost === "0" && quantity === "0") {
+        document.querySelector('.basketStatus').textContent = zeroText;
+      }
+      if (cost !== "0" && quantity !== "0") {
+        document.querySelector('.basketStatus').textContent = text;
+      }
+    }
+
+    setQuantityCost("5", "50 000");
+
+  </script>
+
+</body>
+</html>
