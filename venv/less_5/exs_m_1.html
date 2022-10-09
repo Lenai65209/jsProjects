@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <title>Chess board</title>
+<head>
+  <style>
+	body {
+	  text-align: center;
+	}
+
+	.cell {
+	  height: 25px;
+	  width: 30px;
+	  border: 1.2px solid  black;
+	  border-style: inset;
+	}
+
+	.blackcell {
+	  background-color: black;
+	}
+
+	.whitecell {
+	  background-color: white;
+	}
+  </style>
+</head>
+
+<body>
+  <span style="color:black; font-size:25px;">
+	chess board
+  </span>
+  <br> &nbsp; <br>
+
+  <script>
+
+    /**
+    * Функция рисует шпхматную доску.
+    */
+    function showChessBoard() {
+
+	  const numbers = [' ', ' 1', '2', '3', '4', '5', '6', '7', '8'];
+	  const letters = [' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', ' '];
+
+	  let center = document.createElement('center');
+	  let ChessTable = document.createElement('table');
+
+	  for (let i = 0; i < 10; i++) {
+	    tr = document.createElement('tr');
+        tr.append(letters[i]);
+	    for (let j = 0; j < 9; j++) {
+	      td = document.createElement('td');
+	      if (i === 0 || i === 9) {
+            td.append(numbers[j]);
+            tr.appendChild(td);
+	      } else if (((i + j) % 2 == 0) && j !== 8) {
+	    	td.setAttribute('class', 'cell whitecell');
+	    	tr.appendChild(td);
+	      } else if (j !== 8) {
+	        td.setAttribute('class', 'cell blackcell');
+	        tr.appendChild(td);
+          }
+	    }
+	  tr.append(letters[i]);
+	  ChessTable.appendChild(tr);
+	  }
+	center.appendChild(ChessTable);
+
+	ChessTable.setAttribute('cellspacing', '0');
+	ChessTable.setAttribute('width', '270px');
+	document.body.appendChild(center);
+    }
+
+    showChessBoard();
+
+  </script>
+
+</body>
+
+</html>
