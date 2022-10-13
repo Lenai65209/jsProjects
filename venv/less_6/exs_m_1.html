@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homework</title>
+    <style>
+    .product {
+      width: 200px;
+      padding: 10px;
+      float: left;
+      margin-right: 30px;
+      box-shadow: 0 0 4px black;
+    }
+
+    </style>
+    <script>
+    /**
+    * Вычисляет значения usQuantity, usCost для функции setQuantityCost
+    * в зависимости от состояния корзины.
+    * срабатывает при нажатии кнопки "Купить" и "Очистить корзину".
+    * @param {string} element - элемент для обработки,
+    * в зависимости от которого меняется значения usQuantity, usCost.
+    * Запускает функцию setQuantityCost с соответствующими значениями
+    * usQuantity, usCost:
+    * setQuantityCost(usQuantity, usCost).
+    * При нажатии на "Очистить корзину" изменяет значение
+    * <div id="purchased"></div>, устанавливая textContent = ''.
+    */
+    function calculateQuantityCost(element) {
+      const buyingGoods = element.parentNode.lastElementChild;
+      const usTextContent = buyingGoods.textContent;
+      const nameGoods = element.parentNode.firstElementChild.textContent;
+
+      if (usTextContent === 'Очистить корзину') {
+        const usCost = '0';
+        const usQuantity = '0';
+        setQuantityCost(usQuantity, usCost);
+
+       const elProduct = document.querySelectorAll('.product');
+       elProduct.forEach((elem) => {
+         if (elem.lastElementChild.disabled) {
+           elem.lastElementChild.disabled = '';
+         }
+       });
+
+      const elBasketProduct = document.getElementById('purchased');
+      elBasketProduct.textContent = '';
+
+      } else {
+        const oldUsCost = +document.querySelector('.basketStatus').dataset.cost;
+        const oldUsQuantity = +document.querySelector('.basketStatus')
+          .dataset.quantity;
+        const usCost = +element.parentNode.lastElementChild
+          .previousElementSibling.textContent;
+        const usQuantity = +'1';
+
+        document.querySelector('.basketStatus')
+          .dataset.cost = oldUsCost + usCost;
+        document.querySelector('.basketStatus')
+          .dataset.quantity = oldUsQuantity + usQuantity;
+
+        const cost = document.querySelector('.basketStatus')
+          .getAttribute('data-cost');
+        const quantity = document.querySelector('.basketStatus')
+          .getAttribute('data-quantity');
+
+        into_basket(nameGoods, usQuantity, usCost);
+        setQuantityCost(quantity, cost);
+      }
+    }
+
+    </script>
+
+    <script>
+    /**
+    * Изменяет значение атрибутов элемента с классом basketStatus
+    * data-cost и data-quantity, устанавливая ощую сумму и количество товаров.
+    * @param {string} usQuantity - количество выбранных товаров.
+    * @param {string} usCost - общая сумма, на которую выбраны товары.
+    * Изменяет контент элемента с классом basketStatus.
+    * Если корзина пуста устанавливает: «Корзина пуста»,
+    * Если товар выбран, устанавливает:
+    * «В корзине: n товаров на сумму m рублей»
+    */
+    function setQuantityCost(usQuantity, usCost) {
+
+      document.querySelector('.basketStatus').dataset.cost  = usCost;
+      document.querySelector('.basketStatus').dataset.quantity = usQuantity;
+
+      let cost = document.querySelector('.basketStatus')
+        .getAttribute('data-cost');
+      let quantity = document.querySelector('.basketStatus')
+        .getAttribute('data-quantity');
+      let text = " В корзине: " + quantity +
+        " товаров на сумму " + cost + " рублей ";
+
+      const zeroText = ' «Корзина пуста» ';
+
+      if (cost === "0" && quantity === "0") {
+        document.querySelector('.basketStatus').textContent = zeroText;
+      }
+      if (cost !== "0" && quantity !== "0") {
+        document.querySelector('.basketStatus').textContent = text;
+      }
+      const oldUsCost = +document.querySelector('.basketStatus').dataset.cost;
+      const oldUsQuantity = +document.querySelector('.basketStatus')
+       .dataset.quantity;
+    }
+
+    </script>
+
+    <script>
+    /**
+    * Изменяет значение элемента <div id="purchased"></div>,
+    * добавляя в него товары.
+    * @param {string} nameGoods - наименование товара.
+    * @param {string} usQuantity - количество выбранного товара.
+    * @param {string} usCost - цена товара.
+    */
+    function into_basket(nameGoods, usQuantity, usCost) {
+
+      document.getElementById("purchased")
+        .insertAdjacentHTML('beforeEnd',
+        `<a href="#" class="productName">${nameGoods}</a>
+        <br> &nbsp; <br>`);
+    }
+
+    </script>
+
+</head>
+<body>
+<!--
+a. Добавлять в объект корзины выбранные товары по клику на кнопке «Купить» без
+перезагрузки страницы;
+b. Привязать к событию покупки товара пересчет корзины и обновление ее внешнего
+вида.
+-->
+<p class="basket">Корзина</p>
+<div class="basket">
+    <div id="purchased"></div>
+    <a href="#" onclick="calculateQuantityCost(this)">Очистить корзину</a>
+</div>
+<br> &nbsp; <br>
+<div class="product">
+    <div class="productName">Товар 1</div>
+    <img src="https://loremflickr.com/200/300/goods?lock=2" alt="">
+    <div class="productPrice">500</div>
+    <button onclick="calculateQuantityCost(this)">Купить</button>
+</div>
+<div class="product">
+    <div class="productName">Товар 2</div>
+    <img src="https://loremflickr.com/200/300/goods?lock=12" alt="">
+    <div class="productPrice">5000</div>
+    <button onclick="calculateQuantityCost(this)">Купить</button>
+</div>
+<div class="product">
+    <div class="productName">Товар 3</div>
+    <img src="https://loremflickr.com/200/300/goods?lock=33" alt="">
+    <div class="productPrice">50000</div>
+    <button onclick="calculateQuantityCost(this)">Купить</button>
+</div>
+
+<script>
+  "use strict";
+
+"use strict";
+  document
+    .querySelectorAll('.productName')
+    .forEach(el => el.style.fontSize = '24px');
+  document
+    .querySelectorAll('.product')
+    .forEach(el => el.style.marginRight = '50px');
+
+
+  document.body.addEventListener('click', elem => {
+    const button = elem.target;
+    if (button.tagName !== "BUTTON") {
+      return;
+    }
+    button.textContent = 'Добавлено';
+    button.disabled = true;
+  });
+
+
+  document.querySelector('div.basket')
+    .insertAdjacentHTML('afterBegin',
+    '<button class="btn" id="usBasket" \
+    data-toggle="basket" aria-haspopup="true" aria-expanded="false">\
+        Basket button\
+    </button>');
+
+    document.querySelector('.btn')
+    .insertAdjacentHTML('afterEnd', '<bs class="basketStatus" \
+    id="baskeеButtonStatus" data-cost="0" data-quantity="0">\
+    «Корзина пуста»</bs>');
+
+</script>
+
+</body>
+</html>
