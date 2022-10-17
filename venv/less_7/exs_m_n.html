@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Homework</title>
+  <style>
+    .purchased {
+      display: flex;
+      flex-direction: column;
+    }
+    .product {
+      width: 200px;
+      padding: 10px;
+      float: left;
+      margin-right: 30px;
+      box-shadow: 0 0 4px black;
+    }
+    .goods {
+      width: 400px;
+      height: 30px;
+      padding: 60px auto;
+      float: left;
+      margin-right: 30px;
+      box-shadow: 0 0 4px black;
+    }
+  </style>
+
+  <script>
+    /**
+    * Вычисляет значения usQuantity, usCost для функции setQuantityCost
+    * в зависимости от состояния корзины.
+    * срабатывает при нажатии кнопки "Купить" и "Очистить корзину".
+    * Запускает функцию into_basket(nameGoods, usQuantity, usCost).
+    * Запускает функцию setQuantityCost с соответствующими значениями
+    * usQuantity, usCost:
+    * setQuantityCost(usQuantity, usCost).
+    * При нажатии на "Очистить корзину" изменяет значение
+    * <div id="purchased"></div>, устанавливая textContent = ''.
+    * @param {HTMLButtonElement} element - элемент для обработки,
+    * в зависимости от которого меняется значения usQuantity, usCost.
+    */
+    function calculateQuantityCost(element) {
+      const buyingGoods = element.parentNode.lastElementChild;
+      const usTextContent = buyingGoods.textContent;
+      const nameGoods = element.parentNode.firstElementChild.textContent;
+
+      if (usTextContent === 'Очистить корзину') {
+        const usCost = '0';
+        const usQuantity = '0';
+        setQuantityCost(usQuantity, usCost);
+
+        const elProduct = document.querySelectorAll('.product');
+        elProduct.forEach((elem) => {
+         if (elem.lastElementChild.disabled) {
+           elem.lastElementChild.disabled = '';
+           elem.lastElementChild.textContent = 'Купить';
+         }
+       });
+
+      const elBasketProduct = document.getElementById('purchased');
+      elBasketProduct.textContent = '';
+
+      } else {
+        const oldUsCost = +document.querySelector('.basketStatus').dataset.cost;
+        const oldUsQuantity = +document.querySelector('.basketStatus')
+          .dataset.quantity;
+        const usCost = +element.parentNode.lastElementChild
+          .previousElementSibling.textContent;
+        const usQuantity = +'1';
+
+        document.querySelector('.basketStatus')
+          .dataset.cost = oldUsCost + usCost;
+        document.querySelector('.basketStatus')
+          .dataset.quantity = oldUsQuantity + usQuantity;
+
+        const cost = document.querySelector('.basketStatus')
+          .getAttribute('data-cost');
+        const quantity = document.querySelector('.basketStatus')
+          .getAttribute('data-quantity');
+
+        into_basket(nameGoods, usQuantity, usCost);
+        setQuantityCost(quantity, cost);
+      }
+    }
+
+  </script>
+
+  <script>
+    /**
+    * Изменяет значение атрибутов элемента с классом basketStatus
+    * data-cost и data-quantity, устанавливая ощую сумму и количество товаров.
+    * Изменяет контент элемента с классом basketStatus.
+    * Если корзина пуста устанавливает: «Корзина пуста»,
+    * Если товар выбран, устанавливает:
+    * «В корзине: n товаров на сумму m рублей»
+    * Устанавливает i = 0;
+    * @param {string} usQuantity - количество выбранных товаров.
+    * @param {string} usCost - общая сумма, на которую выбраны товары.
+    */
+    function setQuantityCost(usQuantity, usCost) {
+
+      document.querySelector('.basketStatus').dataset.cost  = usCost;
+      document.querySelector('.basketStatus').dataset.quantity = usQuantity;
+
+      let cost = document.querySelector('.basketStatus')
+        .getAttribute('data-cost');
+      let quantity = document.querySelector('.basketStatus')
+        .getAttribute('data-quantity');
+      let text = " В корзине: " + quantity +
+        " товаров на сумму " + cost + " рублей ";
+
+      const zeroText = ' «Корзина пуста» ';
+
+      if (cost === "0" && quantity === "0") {
+        document.querySelector('.basketStatus').textContent = zeroText;
+        document.querySelector('.purchased').textContent = '';
+        i = 0;
+      }
+      if (cost !== "0" && quantity !== "0") {
+        document.querySelector('.basketStatus').textContent = text;
+      }
+    }
+
+  </script>
+
+  <script>
+    /**
+    * Изменяет значение элемента <div id="purchased"></div>,
+    * добавляя в него товары.
+    * @param {string} nameGoods - наименование товара.
+    * @param {string} usQuantity - количество выбранного товара.
+    * @param {string} usCost - цена товара.
+    */
+    function into_basket(nameGoods, usQuantity, usCost) {
+      document
+        .querySelectorAll('.basket')
+        .forEach(el => el.style.marginRight = '30px');
+
+      document.getElementById("purchased")
+        .insertAdjacentHTML('beforeEnd',
+        `<div class="goods">
+        <a href="#" data-cost = ${usCost} data-quantity = ${usQuantity}
+          data-nameGoods = ${String(nameGoods)} class="productName">${nameGoods}</a>
+        <button class="plus" onclick="plusQuantityCost(this)">+</button>
+        <button class="minus" onclick="minusQuantityCost(this)">-</button>
+        <a>Количество:</a>
+        <a class="quantity">${usQuantity}</a>
+        <a>Стоимость:</a>
+        <a class="cost">${usCost}</a>
+        </div>
+      `);
+    }
+
+  </script>
+
+  <script>
+    /**
+    * Увеличивает значения usCost в зависимости от состояния корзины.
+    * Cрабатывает при нажатии кнопки "+".
+    * Изменяет контент элемента с классом basketStatus.
+    * «В корзине: n товаров на сумму m рублей»
+    * При этом меняется только m - общая стоимость выбранных товаров.
+    * Вызывает фунуцию setQuantityCost(oldQuantity, newCost).
+    * @param {HTMLButtonElement} element - элемент для обработки, кнопка (+).
+    */
+    function plusQuantityCost(element) {
+      let usCost = +element.parentNode.firstElementChild.dataset.cost;
+      let usQuantity = +element.parentNode.firstElementChild.dataset.quantity;
+
+      let price = usCost / usQuantity;
+      usCost += usCost / usQuantity;
+      usQuantity += 1;
+
+      element.parentNode.firstElementChild.dataset.cost = usCost;
+      element.parentNode.firstElementChild.dataset.quantity = usQuantity;
+
+      element.parentNode.querySelector('.quantity').textContent = usQuantity;
+      element.parentNode.querySelector('.cost').textContent = usCost;
+
+      let oldCost = document.querySelector('.basketStatus').dataset.cost;
+      let oldQuantity = document.
+        querySelector('.basketStatus').dataset.quantity;
+      let newCost = +oldCost + price;
+      setQuantityCost(oldQuantity, newCost);
+    }
+
+  </script>
+
+  <script>
+    /**
+    * Уменьшает значения usCost в зависимости от состояния корзины.
+    * Уменьшает значение usQuantity, когда товар удаляется из корзины.
+    * Cрабатывает при нажатии кнопки "-".
+    * Изменяет контент элемента с классом basketStatus.
+    * «В корзине: n товаров на сумму m рублей»
+    * При этом меняется m - общая стоимость выбранных товаров.
+    * В случае когда количество товара = 0 -  удаляет элемент из корзины и
+    * evtymiftn значение m.
+    * Вызывает фунуцию setQuantityCost(oldQuantity|newQuantity, newCost).
+    * @param {HTMLButtonElement} element - элемент для обработки (кнопка -).
+    */
+    function minusQuantityCost(element) {
+
+      let usCost = +element.parentNode.firstElementChild.dataset.cost;
+      let usQuantity = +element.parentNode.firstElementChild.dataset.quantity;
+      let usNameGoods = element.parentNode.firstElementChild.textContent;
+
+      let price = usCost / usQuantity;
+      usCost -= usCost / usQuantity;
+      usQuantity -= 1;
+
+      let oldCost = document.querySelector('.basketStatus').dataset.cost;
+      let oldQuantity = document.querySelector('.basketStatus').dataset.quantity;
+
+      element.parentNode.firstElementChild.dataset.cost = usCost;
+      element.parentNode.firstElementChild.dataset.quantity = usQuantity;
+
+      element.parentNode.querySelector('.quantity').textContent = usQuantity;
+      element.parentNode.querySelector('.cost').textContent = usCost;
+
+      let newCost = String(+oldCost - price);
+      setQuantityCost(oldQuantity, newCost);
+
+      if (usQuantity === 0) {
+        newQuantity = oldQuantity - 1;
+        const elProduct = document.querySelectorAll('.product');
+        elProduct.forEach((elem) => {
+          if (usNameGoods === elem.firstElementChild.textContent) {
+            element.parentElement.remove();
+            elem.lastElementChild.disabled = '';
+            elem.lastElementChild.textContent = "Купить"
+          }});
+        setQuantityCost(newQuantity, newCost);
+      }
+    }
+
+  </script>
+
+  <script>
+    /**
+    * Перелиспывает элементы корзины: корзина, доставка, комментарии.
+    * Cрабатывает при нажатии кнопки "Далее".
+    * Изменяет контент элемента с классом basketStatus.
+    * Удаляет элементы <em class= "purchased" id="purchased"></em>,
+    * включая все текстовые и дочерние узлы, и сохраняет их копии
+    * последовательно: card, delivery, comment.
+    * При переходе в доставку и комментарии деактивирует кнопки "Купить".
+    * @param {HTMLButtonElement} element - элемент для обработки (кнопка Далее).
+    */
+    function showFollowingCardElement(element) {
+      let j;
+      const elProduct = document.querySelectorAll('.product');
+      if (i === 0) {
+        j = 0;
+        card = $('#myDiv1>em').detach();
+        document.getElementById("myDiv1").insertAdjacentHTML('afterBegin',
+        `<em class= "purchased" id="purchased"></em>`);
+        document.getElementById("purchased")
+        .insertAdjacentHTML('afterBegin',
+        `<div class="delivery">
+        <p>Доставка</p>
+        </div>
+        `);
+
+        elProduct.forEach((elem) => {
+          if (!elem.lastElementChild.disabled) {
+            elem.lastElementChild.disabled = true;
+          }
+        });
+      }
+      if (i === 1) {
+        j = 0;
+        delivery = $('#myDiv1>em').detach();
+        document.getElementById("myDiv1").insertAdjacentHTML('afterBegin',
+        `<em class= "purchased" id="purchased"></em>`);
+        document.getElementById("purchased")
+        .insertAdjacentHTML('afterBegin',
+        `<div class="comment">
+        <p>Комментарии</p>
+        </div>
+        `);
+      }
+      if (i === 2) {
+        j = 1;
+        comment = $('#myDiv1>em').detach();
+        emptyCard = $('#myDiv1>a').detach();
+        comment = $('#myDiv1>em').detach();
+        card.appendTo('#myDiv1');
+        emptyCard.appendTo('#myDiv1');
+        elProduct.forEach((elem) => {
+          if (elem.lastElementChild.disabled && elem.
+            lastElementChild.textContent === 'Купить') {
+            elem.lastElementChild.disabled = '';
+          }
+        });
+      }
+      if (j !== 1) {
+        i += 1;
+      } else {
+        i = 0;
+      }
+    }
+
+  </script>
+
+</head>
+<body>
+<!--
+1. Реализовать страницу корзины:
+a. Добавить возможность не только смотреть состав корзины, но и редактировать его,
+обновляя общую стоимость или выводя сообщение «Корзина пуста».
+b. Сделать эти поля сворачиваемыми;
+c. Заполнять поля по очереди, то есть давать посмотреть состав
+корзины, внизу которого есть кнопка «Далее». Если нажать ее,
+сворачивается «Состав корзины» и открывается «Адрес доставки» и
+так далее.
+
+Реализована часть страницы корзины, редактирование, перелистывание
+на одной странице для наглядности.
+
+-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<button class="btn" id="1" \
+  data-toggle="basket" aria-haspopup="true" aria-expanded="false">
+    Корзина
+</button>
+<p>
+<em class="basket" id = "myDiv1">
+  <em class= "purchased" id="purchased"></em>
+  <a href="#" onclick="calculateQuantityCost(this)">Очистить корзину</a>
+</em>
+<button id="2" onclick="showFollowingCardElement(this)">Далее</button>
+</p>
+<br> &nbsp; <br>
+<div class="product">
+  <div class="productName">Товар 1</div>
+  <img src="https://loremflickr.com/200/300/goods?lock=2" alt="">
+  <div class="productPrice">500</div>
+  <button class="menuButton" onclick="calculateQuantityCost(this)">Купить</button>
+</div>
+<div class="product">
+  <div class="productName">Товар 2</div>
+  <img src="https://loremflickr.com/200/300/goods?lock=12" alt="">
+  <div class="productPrice">5000</div>
+  <button class="menuButton" onclick="calculateQuantityCost(this)">Купить</button>
+</div>
+<div class="product">
+  <div class="productName">Товар 3</div>
+  <img src="https://loremflickr.com/200/300/goods?lock=33" alt="">
+  <div class="productPrice">50000</div>
+  <button class="menuButton" onclick="calculateQuantityCost(this)">Купить</button>
+</div>
+
+  <script>
+    "use strict";
+    let card;
+    let comment;
+    let delivery;
+    let i = 0;
+
+    document
+      .querySelectorAll('.productName')
+      .forEach(el => el.style.fontSize = '24px');
+    document
+      .querySelectorAll('.product')
+      .forEach(el => el.style.marginRight = '50px');
+
+    document.body.addEventListener('click', event => {
+    const button = event.target;
+    if (button.tagName !== "BUTTON" || !event.
+        target.classList.contains('menuButton')) {
+      return;
+    }
+    button.textContent = 'Добавлено';
+    button.disabled = true;
+  });
+
+    document.querySelector('.btn')
+    .insertAdjacentHTML('afterEnd', '<bs class="basketStatus" \
+    id="baskeеButtonStatus" data-cost="0" data-quantity="0">\
+    «Корзина пуста»</bs>');
+
+  </script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script>
+    $( "#1" ).click(function() {
+      $( "p" ).slideToggle( "fast" );
+    });
+  </script>
+
+</body>
+</html>
